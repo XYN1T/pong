@@ -1,16 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class BallManager : MonoBehaviour
 {
-	public GameObject prefab;
+	private GameObject prefab;
 	private Rigidbody2D rigidbody2;
 	private TrailRenderer trail;
 
 	private void Start()
 	{
+		prefab = gameObject;
 		trail = gameObject.GetComponent<TrailRenderer>();
 		StartCoroutine(Waiter());
 		gameObject.SetActive(true);

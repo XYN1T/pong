@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class InfinityPlatform : MonoBehaviour
 {
-	public GameObject prefab;
+	public float yAmplitude;
 
+	private GameObject prefab;
 	private GameObject topPrefab;
 	private GameObject bottomPrefab;
 	private GameObject middle; // middle = 'main' in some sort
@@ -14,6 +15,7 @@ public class InfinityPlatform : MonoBehaviour
 
 	private void Start()
 	{
+		prefab = gameObject;
 		Vector3 platformPos = gameObject.transform.position;
 		switch (platformPos.x)
 		{
@@ -28,16 +30,17 @@ public class InfinityPlatform : MonoBehaviour
 		if (platformPos.y == 0) // if platform is the one in the middle
 		{
 			middle = gameObject;
-			Vector3 prefabPos = new Vector3(platformPos.x, platformPos.y + 9, platformPos.z);
+			Vector3 prefabPos = new Vector3(platformPos.x, platformPos.y + yAmplitude/2, platformPos.z);
 
-			// I don't know if this is necessary... (it is)
 			topPrefab = Instantiate(prefab, prefabPos, Quaternion.identity);
 			topPrefab.name = prefab.name; // renaming them for clarity
+			topPrefab.transform.parent = GameObject.Find(side).transform;
 
-			prefabPos.y = -9;
+			prefabPos.y = -yAmplitude/2;
 			bottomPrefab = Instantiate(prefab, prefabPos, Quaternion.identity);
 			bottomPrefab.name = prefab.name;
-		}
+            bottomPrefab.transform.parent = GameObject.Find(side).transform;
+        }
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
@@ -48,9 +51,10 @@ public class InfinityPlatform : MonoBehaviour
 			{
 				// calculates where to spawn platform
 				Vector3 pos = gameObject.transform.position;
-				pos.y += pos.y > 0 ? -18 : 18;
-				temp = Instantiate(prefab, pos, Quaternion.identity); // spawn new platform below
+				pos.y += pos.y > 0 ? -yAmplitude : yAmplitude;
+				temp = Instantiate(prefab, pos, Quaternion.identity); // spawn new platform below/above
 				temp.name = prefab.name;
+				temp.transform.parent = GameObject.Find(side).transform;
 			}
 		}
 	}
